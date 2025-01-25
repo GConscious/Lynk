@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route('/api', methods=['GET'])
+@app.route('/api/events', methods=['GET'])
 def hello():
     return {'message': 'Hello, World!'}
 
