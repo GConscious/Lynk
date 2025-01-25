@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Camera } from "lucide-react";
+import { auth } from "./firebase-config.js";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const BusinessSignup = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +12,10 @@ const BusinessSignup = () => {
     location: "",
     personalStatement: "",
     businessImage: null,
+    email: "", // Added email field to state as you're using it
   });
+
+  const [error, setError] = useState(""); // To handle and display errors
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,10 +33,25 @@ const BusinessSignup = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add submission logic here
-    console.log(formData);
+    const { email, password } = formData;
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      // Here you can add additional user profile data to Firestore if needed
+      console.log("User created:", user);
+      alert("Signup successful!");
+    } catch (err) {
+      setError(err.message);
+      console.error("Signup error:", err.message);
+    }
   };
 
   return (
@@ -59,22 +79,20 @@ const BusinessSignup = () => {
                 required
               />
             </div>
-
             <div className="mb-3">
-              <label htmlFor="username" className="form-label">
-                Username
+              <label htmlFor="email" className="form-label">
+                Email
               </label>
               <input
-                type="text"
+                type="email"
                 className="form-control"
-                id="username"
-                name="username"
-                value={formData.username}
+                id="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
                 required
               />
             </div>
-
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
                 Password
@@ -89,25 +107,20 @@ const BusinessSignup = () => {
                 required
               />
             </div>
-
             <div className="mb-3">
               <label htmlFor="serviceType" className="form-label">
                 Service Type
               </label>
-              <select
-                className="form-select"
+              <input
+                type="text"
+                className="form-control"
                 id="serviceType"
                 name="serviceType"
                 value={formData.serviceType}
                 onChange={handleChange}
                 required
-              >
-                <option value="">Select Service Type</option>
-                <option value="food">Food</option>
-                <option value="product">Product</option>
-              </select>
+              />
             </div>
-
             <div className="mb-3">
               <label htmlFor="location" className="form-label">
                 Location
@@ -122,7 +135,6 @@ const BusinessSignup = () => {
                 required
               />
             </div>
-
             <div className="mb-3">
               <label htmlFor="personalStatement" className="form-label">
                 Business Bio
@@ -135,9 +147,8 @@ const BusinessSignup = () => {
                 onChange={handleChange}
                 rows="4"
                 required
-              ></textarea>
+              />
             </div>
-
             <div className="mb-3">
               <label htmlFor="businessImage" className="form-label">
                 Business Image
@@ -164,10 +175,11 @@ const BusinessSignup = () => {
                 </div>
               )}
             </div>
-
             <button type="submit" className="btn btn-primary w-100">
               Sign Up
             </button>
+            {error && <p className="text-danger mt-2">{error}</p>}{" "}
+            {/* Display error message */}
           </form>
         </div>
       </div>
