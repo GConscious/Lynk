@@ -2,20 +2,21 @@ import React, { useState } from "react";
 import { Camera } from "lucide-react";
 import { auth } from "./firebase-config.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
 const BusinessSignup = () => {
   const [formData, setFormData] = useState({
     businessName: "",
-    username: "",
     password: "",
     serviceType: "",
     location: "",
     personalStatement: "",
     businessImage: null,
-    email: "", // Added email field to state as you're using it
+    email: "",
   });
 
   const [error, setError] = useState(""); // To handle and display errors
+  const db = getFirestore();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,8 +46,16 @@ const BusinessSignup = () => {
       );
       const user = userCredential.user;
 
-      // Here you can add additional user profile data to Firestore if needed
-      console.log("User created:", user);
+      await setDoc(doc(db, "users", user.uid), {
+        businessName: formData.businessName,
+        serviceType: formData.serviceType,
+        location: formData.location,
+        personalStatement: formData.personalStatement,
+        businessImage: formData.businessImage,
+        email: formData.email,
+      });
+
+      console.log("User created:", user.uid);
       alert("Signup successful!");
     } catch (err) {
       setError(err.message);
