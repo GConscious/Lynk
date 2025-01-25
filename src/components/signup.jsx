@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Camera } from "lucide-react";
-
-
-
+import { auth } from "./firebase-config.js";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const BusinessSignup = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +12,10 @@ const BusinessSignup = () => {
     location: "",
     personalStatement: "",
     businessImage: null,
+    email: "", // Added email field to state as you're using it
   });
+
+  const [error, setError] = useState(""); // To handle and display errors
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,162 +33,155 @@ const BusinessSignup = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add submission logic here
-    console.log(formData);
+    const { email, password } = formData;
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      // Here you can add additional user profile data to Firestore if needed
+      console.log("User created:", user);
+      alert("Signup successful!");
+    } catch (err) {
+      setError(err.message);
+      console.error("Signup error:", err.message);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Business Signup</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="businessName"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Business Name
-            </label>
-            <input
-              type="text"
-              name="businessName"
-              value={formData.businessName}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="serviceType"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Service Type
-            </label>
-            <select
-              name="serviceType"
-              value={formData.serviceType}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Select Service Type</option>
-              <option value="food">Food</option>
-              <option value="product">Product</option>
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="location"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Location
-            </label>
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="personalStatement"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Business Bio
-            </label>
-            <textarea
-              name="personalStatement"
-              value={formData.personalStatement}
-              onChange={handleChange}
-              required
-              rows={4}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="businessImage"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Business Image
-            </label>
-            <div className="mt-1 flex items-center">
-              <input
-                type="file"
-                name="businessImage"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="businessImageUpload"
-              />
-              <label
-                htmlFor="businessImageUpload"
-                className="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
-              >
-                <Camera className="mr-2 h-5 w-5" />
-                Upload Image
+    <div className="container-fluid bg-light min-vh-100 d-flex align-items-center justify-content-center p-4">
+      <div
+        className="card shadow-sm"
+        style={{ maxWidth: "500px", width: "100%" }}
+      >
+        <div className="card-header bg-primary text-white text-center">
+          <h2 className="my-2">Business Signup</h2>
+        </div>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="businessName" className="form-label">
+                Business Name
               </label>
+              <input
+                type="text"
+                className="form-control"
+                id="businessName"
+                name="businessName"
+                value={formData.businessName}
+                onChange={handleChange}
+                required
+              />
             </div>
-            {formData.businessImage && (
-              <p className="mt-2 text-sm text-gray-500">
-                {formData.businessImage.name}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="serviceType" className="form-label">
+                Service Type
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="serviceType"
+                name="serviceType"
+                value={formData.serviceType}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="location" className="form-label">
+                Location
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="personalStatement" className="form-label">
+                Business Bio
+              </label>
+              <textarea
+                className="form-control"
+                id="personalStatement"
+                name="personalStatement"
+                value={formData.personalStatement}
+                onChange={handleChange}
+                rows="4"
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="businessImage" className="form-label">
+                Business Image
+              </label>
+              <div className="input-group">
+                <input
+                  type="file"
+                  className="form-control d-none"
+                  id="businessImageUpload"
+                  name="businessImage"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
+                <label
+                  htmlFor="businessImageUpload"
+                  className="btn btn-outline-secondary d-flex align-items-center"
+                >
+                  <Camera className="me-2" /> Upload Image
+                </label>
+              </div>
+              {formData.businessImage && (
+                <div className="mt-2 text-muted small">
+                  {formData.businessImage.name}
+                </div>
+              )}
+            </div>
+            <button type="submit" className="btn btn-primary w-100">
               Sign Up
             </button>
-          </div>
-        </form>
+            {error && <p className="text-danger mt-2">{error}</p>}{" "}
+            {/* Display error message */}
+          </form>
+        </div>
       </div>
     </div>
   );
