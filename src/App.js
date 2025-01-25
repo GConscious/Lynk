@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BusinessSignup from "./components/signup.jsx";
+import BusinessSignup from "./components/BusinessSignup.jsx";
 import Events from "./components/Events.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
