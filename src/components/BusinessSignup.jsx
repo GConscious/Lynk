@@ -2,21 +2,24 @@ import React, { useState } from "react";
 import { Camera } from "lucide-react";
 import { auth } from "./firebase-config.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 
+// form for businesses to signup and create their account
 const BusinessSignup = () => {
   const [formData, setFormData] = useState({
     businessName: "",
-    username: "",
     password: "",
     serviceType: "",
     location: "",
     personalStatement: "",
     businessImage: null,
-    email: "", // Added email field to state as you're using it
+    email: "",
   });
 
   const [error, setError] = useState(""); // To handle and display errors
+  const db = getFirestore();
 
+  // change in a field
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -25,6 +28,7 @@ const BusinessSignup = () => {
     }));
   };
 
+  // handles uploading of an image
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     setFormData((prev) => ({
@@ -33,6 +37,9 @@ const BusinessSignup = () => {
     }));
   };
 
+  // handles the submit of the form
+  // creates auth for the user that is signing up
+  // creates firebase db with users data
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
@@ -45,8 +52,16 @@ const BusinessSignup = () => {
       );
       const user = userCredential.user;
 
-      // Here you can add additional user profile data to Firestore if needed
-      console.log("User created:", user);
+      await setDoc(doc(db, "users", user.uid), {
+        businessName: formData.businessName,
+        serviceType: formData.serviceType,
+        location: formData.location,
+        personalStatement: formData.personalStatement,
+        businessImage: formData.businessImage,
+        email: formData.email,
+      });
+
+      console.log("User created:", user.uid);
       alert("Signup successful!");
     } catch (err) {
       setError(err.message);
@@ -138,6 +153,12 @@ const BusinessSignup = () => {
             <div className="mb-3">
               <label htmlFor="personalStatement" className="form-label">
                 Business Bio
+                <p>
+                  <small>
+                    What kind of business are you? What values are important to
+                    you? What kind of services do you offer?
+                  </small>
+                </p>
               </label>
               <textarea
                 className="form-control"
