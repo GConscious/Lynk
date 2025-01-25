@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, MapPin, Users, DollarSign } from 'lucide-react';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 // Sample data 
 const eventsData = [
@@ -37,7 +39,7 @@ const eventsData = [
     organizationType: "Department",
     organization: "College of Engineering",
     date: "May 5, 2025",
-    location: "Husky Union Building",
+    location: "Engineering Hall",
     attendees: 300,
     needs: ["Lunch Service", "Coffee Station"],
     budget: "$3000-4000",
@@ -49,9 +51,34 @@ const eventsData = [
 
 const Events = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [messageData, setMessageData] = useState({
+    message: '',
+    businessName: '',
+    contactEmail: ''
+  });
 
   const handleEventClick = (event) => {
     setSelectedEvent(event);
+  };
+
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    // Here you would handle sending the message to your backend
+    console.log('Sending message:', {
+      to: selectedEvent.contactEmail,
+      ...messageData
+    });
+    setShowContactModal(false);
+    setMessageData({ message: '', businessName: '', contactEmail: '' });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setMessageData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   return (
@@ -151,12 +178,99 @@ const Events = () => {
               </div>
 
               <div className="d-flex gap-3">
-                <button className="btn btn-primary flex-grow-1">
+                <button 
+                  className="btn btn-primary flex-grow-1"
+                  onClick={() => setShowContactModal(true)}
+                >
                   Contact Organizer
                 </button>
                 <button className="btn btn-outline-primary flex-grow-1">
                   Save Event
                 </button>
+              </div>
+
+              {/* Contact Modal */}
+              <div 
+                className={`modal fade ${showContactModal ? 'show' : ''}`} 
+                tabIndex="-1"
+                role="dialog"
+                style={{ 
+                  display: showContactModal ? 'block' : 'none',
+                  backgroundColor: 'rgba(0,0,0,0.5)'
+                }}
+              >
+                <div className="modal-dialog modal-dialog-centered">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h5 className="modal-title">Contact Event Organizer</h5>
+                      <button 
+                        type="button" 
+                        className="btn-close" 
+                        onClick={() => setShowContactModal(false)}
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <form onSubmit={handleContactSubmit}>
+                      <div className="modal-body">
+                        <div className="mb-3">
+                          <label htmlFor="businessName" className="form-label">Business Name</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="businessName"
+                            name="businessName"
+                            value={messageData.businessName}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="contactEmail" className="form-label">Contact Email</label>
+                          <input
+                            type="email"
+                            className="form-control"
+                            id="contactEmail"
+                            name="contactEmail"
+                            value={messageData.contactEmail}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="message" className="form-label">Message</label>
+                          <textarea
+                            className="form-control"
+                            id="message"
+                            name="message"
+                            rows="5"
+                            value={messageData.message}
+                            onChange={handleInputChange}
+                            placeholder="Introduce your business and explain how you can help with this event..."
+                            required
+                          ></textarea>
+                        </div>
+                        <div className="text-muted small">
+                          Your message will be sent to: {selectedEvent.contactEmail}
+                        </div>
+                      </div>
+                      <div className="modal-footer">
+                        <button 
+                          type="button" 
+                          className="btn btn-secondary" 
+                          onClick={() => setShowContactModal(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          type="submit" 
+                          className="btn btn-primary"
+                        >
+                          Send Message
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
           ) : (

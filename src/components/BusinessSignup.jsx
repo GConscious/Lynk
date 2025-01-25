@@ -153,6 +153,12 @@ const BusinessSignup = () => {
             <div className="mb-3">
               <label htmlFor="personalStatement" className="form-label">
                 Business Bio
+                <p>
+                  <small>
+                    What kind of business are you? What values are important to
+                    you? What kind of services do you offer?
+                  </small>
+                </p>
               </label>
               <textarea
                 className="form-control"

@@ -4,7 +4,9 @@ import BusinessSignup from "./components/BusinessSignup.jsx";
 import Events from "./components/Events.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
-import BusinessLogin from "./components/Login.jsx";
+import BusinessLogin from "./components/BusinessLogin.jsx";
+import BusinessProfile from "./components/BusinessProfile.jsx";
+
 
 function App() {
   return (
