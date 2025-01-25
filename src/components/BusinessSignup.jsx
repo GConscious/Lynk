@@ -4,6 +4,7 @@ import { auth } from "./firebase-config.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 
+// form for businesses to signup and create their account
 const BusinessSignup = () => {
   const [formData, setFormData] = useState({
     businessName: "",
@@ -18,6 +19,7 @@ const BusinessSignup = () => {
   const [error, setError] = useState(""); // To handle and display errors
   const db = getFirestore();
 
+  // change in a field
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -26,6 +28,7 @@ const BusinessSignup = () => {
     }));
   };
 
+  // handles uploading of an image
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     setFormData((prev) => ({
@@ -34,6 +37,9 @@ const BusinessSignup = () => {
     }));
   };
 
+  // handles the submit of the form
+  // creates auth for the user that is signing up
+  // creates firebase db with users data
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
