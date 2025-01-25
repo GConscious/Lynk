@@ -47,7 +47,7 @@ const BusinessLogin = () => {
         className="card shadow-sm"
         style={{ maxWidth: "400px", width: "100%" }}
       >
-        <div className="card-header bg-primary text-white text-center">
+        <div className="card-header text-white text-center" style={{ backgroundColor: "#008000" }}>
           <h2 className="my-2">Business Login</h2>
         </div>
         <div className="card-body">
@@ -80,7 +80,7 @@ const BusinessLogin = () => {
                 required
               />
             </div>
-            <button type="submit" className="btn btn-primary w-100">
+            <button type="submit" className="btn" style={{ backgroundColor: "#008000", color: "white" }}>
               Login
             </button>
             {error && <p className="text-danger mt-2">{error}</p>}
