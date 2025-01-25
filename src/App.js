@@ -4,6 +4,8 @@ import Events from "./components/Events.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
 import BusinessLogin from "./components/BusinessLogin.jsx";
+import BusinessProfile from "./components/BusinessProfile.jsx";
+
 
 function App() {
   return (
@@ -11,6 +13,7 @@ function App() {
       <Route path="/signup" element={<BusinessSignup />} />
       <Route path="/events" element={<Events />} />
       <Route path="/login" element={<BusinessLogin />} />
+      <Route path="/profile" element={<BusinessProfile />} />
     </Routes>
   );
 }
