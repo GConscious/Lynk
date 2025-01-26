@@ -60,6 +60,15 @@ function Navbar({ user }) {
                     </Link>
                   </li>
                   <li className="nav-item">
+                    <Link 
+                      className="nav-link fs-5" 
+                      to="/saved" 
+                      style={{ color: '#008000', fontFamily: 'Trebuchet MS, sans-serif' }}
+                    >
+                      Saved Events
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <button 
                       className="nav-link fs-5 btn btn-link" 
                       onClick={handleLogout}

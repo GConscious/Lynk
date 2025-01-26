@@ -8,6 +8,7 @@ import BusinessLogin from "./components/BusinessLogin.jsx";
 import BusinessProfile from "./components/BusinessProfile.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
+import SavedEvents from "./components/SavedEvents.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -51,6 +52,14 @@ function App() {
           element={
             <AuthRoute>
               <BusinessProfile />
+            </AuthRoute>
+          } 
+        />
+        <Route 
+          path="/saved" 
+          element={
+            <AuthRoute>
+              <SavedEvents />
             </AuthRoute>
           } 
         />
