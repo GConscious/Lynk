@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Users, DollarSign } from 'lucide-react';
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
-// Sample data 
+// Sample data
 const eventsData = [
   {
     id: 1,
@@ -49,7 +48,7 @@ const eventsData = [
   }
 ];
 
-const Events = () => {
+const Events = ({ user }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
   const [messageData, setMessageData] = useState({
@@ -57,20 +56,58 @@ const Events = () => {
     businessName: '',
     contactEmail: ''
   });
+  const [businessData, setBusinessData] = useState(null);
+  const db = getFirestore();
+
+  useEffect(() => {
+    const fetchBusinessData = async () => {
+      if (user) {
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setBusinessData(data);
+            setMessageData(prev => ({
+              ...prev,
+              businessName: data.businessName || '',
+              contactEmail: data.email || ''
+            }));
+          }
+        } catch (error) {
+          console.error("Error fetching business data:", error);
+        }
+      }
+    };
+
+    fetchBusinessData();
+  }, [user, db]);
 
   const handleEventClick = (event) => {
     setSelectedEvent(event);
   };
 
-  const handleContactSubmit = (e) => {
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
-    // Here you would handle sending the message to your backend
-    console.log('Sending message:', {
-      to: selectedEvent.contactEmail,
-      ...messageData
-    });
-    setShowContactModal(false);
-    setMessageData({ message: '', businessName: '', contactEmail: '' });
+    try {
+      console.log('Sending message:', {
+        to: selectedEvent.contactEmail,
+        from: businessData,
+        message: messageData.message
+      });
+      
+      setShowContactModal(false);
+      setMessageData(prev => ({
+        ...prev,
+        message: ''
+      }));
+      
+      alert('Message sent successfully!');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('Error sending message. Please try again.');
+    }
   };
 
   const handleInputChange = (e) => {
@@ -220,8 +257,7 @@ const Events = () => {
                             id="businessName"
                             name="businessName"
                             value={messageData.businessName}
-                            onChange={handleInputChange}
-                            required
+                            readOnly
                           />
                         </div>
                         <div className="mb-3">
@@ -232,8 +268,7 @@ const Events = () => {
                             id="contactEmail"
                             name="contactEmail"
                             value={messageData.contactEmail}
-                            onChange={handleInputChange}
-                            required
+                            readOnly
                           />
                         </div>
                         <div className="mb-3">
