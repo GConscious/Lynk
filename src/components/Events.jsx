@@ -1,52 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Users, DollarSign } from 'lucide-react';
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-
-// Sample data
-const eventsData = [
-  {
-    id: 1,
-    title: "iSchool Hackathon 2025",
-    organizationType: "Student Organization",
-    organization: "Code Club UW",
-    date: "March 15-16, 2025",
-    location: "Mary Gates Hall",
-    attendees: 200,
-    needs: ["Catering", "Beverages", "Snacks"],
-    budget: "$2000-3000",
-    description: "A 24-hour hackathon bringing together students from all disciplines to create innovative solutions. Looking for food and beverage sponsors to keep our participants energized throughout the event.",
-    requirements: "Need catering for 200 people, including breakfast, lunch, dinner, and ongoing snacks/beverages. Must accommodate vegetarian and gluten-free options.",
-    contactEmail: "hackathon@codeclub.edu"
-  },
-  {
-    id: 2,
-    title: "Spring Cultural Festival",
-    organizationType: "Cultural Association",
-    organization: "International Student Society",
-    date: "April 20, 2025",
-    location: "University Square",
-    attendees: 500,
-    needs: ["Food Vendors", "Refreshments"],
-    budget: "$5000-7000",
-    description: "Annual cultural festival showcasing diverse traditions through food, music, and performances. Seeking local restaurants and caterers to represent various cuisines.",
-    requirements: "Looking for 5-7 food vendors who can serve authentic cultural dishes. Each vendor should be able to serve 100-150 portions.",
-    contactEmail: "culturalfest@university.edu"
-  },
-  {
-    id: 3,
-    title: "Engineering Career Fair",
-    organizationType: "Department",
-    organization: "College of Engineering",
-    date: "May 5, 2025",
-    location: "Engineering Hall",
-    attendees: 300,
-    needs: ["Lunch Service", "Coffee Station"],
-    budget: "$3000-4000",
-    description: "Semi-annual career fair connecting engineering students with potential employers. Need catering services for both students and company representatives.",
-    requirements: "Professional lunch service for 300 people, including vegetarian options. Continuous coffee and refreshment station throughout the day.",
-    contactEmail: "careerfair@eng.edu"
-  }
-];
+import eventData from "../data/uw-events.json"; 
 
 const Events = ({ user }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -57,7 +12,13 @@ const Events = ({ user }) => {
     contactEmail: ''
   });
   const [businessData, setBusinessData] = useState(null);
+  const [eventsData, setEventsData] = useState([]);
+
   const db = getFirestore();
+
+  useEffect(() => {
+    setEventsData(eventData.events);
+  }, []);
 
   useEffect(() => {
     const fetchBusinessData = async () => {

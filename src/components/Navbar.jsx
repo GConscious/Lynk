@@ -50,6 +50,17 @@ function Navbar({ user }) {
                       Events
                     </Link>
                   </li>
+
+                  <li className="nav-item">
+                    <Link 
+                      className="nav-link fs-5" 
+                      to="/recommendations" 
+                      style={{ color: '#008000', fontFamily: 'Trebuchet MS, sans-serif' }}
+                    >
+                      Recommendations
+                    </Link>
+                  </li>
+
                   <li className="nav-item">
                     <Link 
                       className="nav-link fs-5" 
