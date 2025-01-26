@@ -25,7 +25,7 @@ const BusinessProfile = () => {
           const formattedData = {
             businessName: data.businessName || "N/A",
             email: data.email || "N/A",
-            location: data.Location || "N/A",
+            location: data.location || "N/A", 
             personalStatement: data.personalStatement || "N/A",
             serviceType: data.serviceType || "N/A",
             businessImage: data.businessImage || null,
