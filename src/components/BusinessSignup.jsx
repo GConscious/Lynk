@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Camera } from "lucide-react";
-import { auth } from "./firebase-config.js";
+import { auth } from "./firebase-config"; 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
-// form for businesses to signup and create their account
 const BusinessSignup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     businessName: "",
     password: "",
@@ -16,10 +17,10 @@ const BusinessSignup = () => {
     email: "",
   });
 
-  const [error, setError] = useState(""); // To handle and display errors
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const db = getFirestore();
 
-  // change in a field
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -28,7 +29,6 @@ const BusinessSignup = () => {
     }));
   };
 
-  // handles uploading of an image
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     setFormData((prev) => ({
@@ -37,35 +37,41 @@ const BusinessSignup = () => {
     }));
   };
 
-  // handles the submit of the form
-  // creates auth for the user that is signing up
-  // creates firebase db with users data
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = formData;
+    setLoading(true);
+    setError("");
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password
+        formData.email,
+        formData.password
       );
-      const user = userCredential.user;
 
-      await setDoc(doc(db, "users", user.uid), {
+      const userData = {
         businessName: formData.businessName,
         serviceType: formData.serviceType,
         location: formData.location,
         personalStatement: formData.personalStatement,
-        businessImage: formData.businessImage,
         email: formData.email,
-      });
+        createdAt: new Date().toISOString(),
+        businessImage: formData.businessImage ? formData.businessImage.name : null,
+      };
 
-      console.log("User created:", user.uid);
+      const userDocRef = doc(db, "users", userCredential.user.uid);
+      await setDoc(userDocRef, userData);
+
+      console.log("User created successfully:", userCredential.user.uid);
       alert("Signup successful!");
+      navigate("/events");
     } catch (err) {
-      setError(err.message);
-      console.error("Signup error:", err.message);
+      console.error("Signup error:", err);
+      setError(err.message.includes("auth") 
+        ? "Error creating account. Please check your email and password." 
+        : "Error creating account. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -123,6 +129,7 @@ const BusinessSignup = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                minLength="6"
               />
             </div>
             <div className="mb-3">
@@ -185,7 +192,6 @@ const BusinessSignup = () => {
                   name="businessImage"
                   accept="image/*"
                   onChange={handleImageUpload}
-                  required
                 />
                 <label
                   htmlFor="businessImageUpload"
@@ -202,13 +208,20 @@ const BusinessSignup = () => {
             </div>
             <button
               type="submit"
-              className="btn"
+              className="btn w-100"
               style={{ backgroundColor: "#008000", color: "white" }}
+              disabled={loading}
             >
-              Sign Up
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Signing Up...
+                </>
+              ) : (
+                'Sign Up'
+              )}
             </button>
-            {error && <p className="text-danger mt-2">{error}</p>}{" "}
-            {/* Display error message */}
+            {error && <p className="text-danger mt-2">{error}</p>}
           </form>
         </div>
       </div>

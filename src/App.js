@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -38,7 +37,7 @@ function App() {
     <>
       <Navbar user={user} />
       <Routes>
-        <Route path="/" element={<Navigate to="/events" replace />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route 
           path="/events" 
           element={
