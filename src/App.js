@@ -8,7 +8,7 @@ import BusinessLogin from "./components/BusinessLogin.jsx";
 import BusinessProfile from "./components/BusinessProfile.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import Recommendations from "./components/Recommendations.jsx";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,34 +38,33 @@ function App() {
       <Navbar user={user} />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route 
-          path="/events" 
+        <Route
+          path="/events"
           element={
             <AuthRoute>
               <Events user={user} />
             </AuthRoute>
-          } 
+          }
         />
-        <Route 
-          path="/profile" 
+        <Route
+          path="/profile"
           element={
             <AuthRoute>
               <BusinessProfile />
             </AuthRoute>
-          } 
+          }
         />
-        <Route 
-          path="/signup" 
+        <Route
+          path="/signup"
           element={
             user ? <Navigate to="/events" replace /> : <BusinessSignup />
-          } 
+          }
         />
-        <Route 
-          path="/login" 
-          element={
-            user ? <Navigate to="/events" replace /> : <BusinessLogin />
-          } 
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/events" replace /> : <BusinessLogin />}
         />
+        <Route path="/recommendations" element={<Recommendations />} />
       </Routes>
     </>
   );
