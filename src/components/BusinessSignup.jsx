@@ -75,7 +75,10 @@ const BusinessSignup = () => {
         className="card shadow-sm"
         style={{ maxWidth: "500px", width: "100%" }}
       >
-        <div className="card-header text-white text-center" style={{ backgroundColor: "#008000" }}>
+        <div
+          className="card-header text-white text-center"
+          style={{ backgroundColor: "#008000" }}
+        >
           <h2 className="my-2">Business Signup</h2>
         </div>
         <div className="card-body">
@@ -182,6 +185,7 @@ const BusinessSignup = () => {
                   name="businessImage"
                   accept="image/*"
                   onChange={handleImageUpload}
+                  required
                 />
                 <label
                   htmlFor="businessImageUpload"
@@ -196,7 +200,11 @@ const BusinessSignup = () => {
                 </div>
               )}
             </div>
-            <button type="submit" className="btn" style={{ backgroundColor: "#008000", color: "white" }}>
+            <button
+              type="submit"
+              className="btn"
+              style={{ backgroundColor: "#008000", color: "white" }}
+            >
               Sign Up
             </button>
             {error && <p className="text-danger mt-2">{error}</p>}{" "}
