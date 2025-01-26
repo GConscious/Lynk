@@ -36,6 +36,11 @@ function Navbar() {
                   Login
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link fs-5" to="/profile" style={{ color: '#008000', fontFamily: 'Trebuchet MS, sans-serif' }}>
+                  Profile
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
