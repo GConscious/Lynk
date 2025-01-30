@@ -1,4 +1,5 @@
 # Lynk
+By: Amrith Gandham, Asad Jaffery, Joshua Williams, Vaibava Venkatesan
 
 ## What is Lynk?
 

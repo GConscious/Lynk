@@ -8,7 +8,7 @@ import BusinessLogin from "./components/BusinessLogin.jsx";
 import BusinessProfile from "./components/BusinessProfile.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Recommendations from "./components/Recommendations.jsx";
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -64,7 +64,6 @@ function App() {
           path="/login"
           element={user ? <Navigate to="/events" replace /> : <BusinessLogin />}
         />
-        <Route path="/recommendations" element={<Recommendations />} />
       </Routes>
     </>
   );
