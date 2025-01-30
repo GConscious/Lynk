@@ -63,8 +63,8 @@ function App() {
             </AuthRoute>
           } 
         />
-        <Route 
-          path="/signup" 
+        <Route
+          path="/signup"
           element={
             user ? <Navigate to="/events" replace /> : <BusinessSignup />
           }
@@ -73,7 +73,6 @@ function App() {
           path="/login"
           element={user ? <Navigate to="/events" replace /> : <BusinessLogin />}
         />
-        <Route path="/recommendations" element={<Recommendations />} />
       </Routes>
     </>
   );
