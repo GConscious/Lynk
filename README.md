@@ -1,4 +1,4 @@
-# Lynk
+# Lynk - 2025 WINFO Hackathon Best Coding Winner
 By: Amrith Gandham, Asad Jaffery, Joshua Williams, Vaibava Venkatesan
 
 ## What is Lynk?
