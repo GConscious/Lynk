@@ -84,10 +84,7 @@ const BusinessSignup = () => {
         className="card shadow-sm"
         style={{ maxWidth: "500px", width: "100%" }}
       >
-        <div
-          className="card-header text-white text-center"
-          style={{ backgroundColor: "#008000" }}
-        >
+        <div className="card-header text-white text-center" style={{ backgroundColor: "#008000" }}>
           <h2 className="my-2">Business Signup</h2>
         </div>
         <div className="card-body">
