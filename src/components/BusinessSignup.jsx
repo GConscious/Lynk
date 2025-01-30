@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Camera } from "lucide-react";
-import { auth } from "./firebase-config"; 
+import { auth } from "./firebase-config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
@@ -55,10 +55,11 @@ const BusinessSignup = () => {
         location: formData.location,
         personalStatement: formData.personalStatement,
         email: formData.email,
-        createdAt: new Date().toISOString(),
-        businessImage: formData.businessImage ? formData.businessImage.name : null,
+        businessImage: formData.businessImage
+          ? formData.businessImage.name
+          : null,
       };
-
+      console.log(formData.location);
       const userDocRef = doc(db, "users", userCredential.user.uid);
       await setDoc(userDocRef, userData);
 
@@ -67,9 +68,11 @@ const BusinessSignup = () => {
       navigate("/events");
     } catch (err) {
       console.error("Signup error:", err);
-      setError(err.message.includes("auth") 
-        ? "Error creating account. Please check your email and password." 
-        : "Error creating account. Please try again.");
+      setError(
+        err.message.includes("auth")
+          ? "Error creating account. Please check your email and password."
+          : "Error creating account. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -214,11 +217,15 @@ const BusinessSignup = () => {
             >
               {loading ? (
                 <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
                   Signing Up...
                 </>
               ) : (
-                'Sign Up'
+                "Sign Up"
               )}
             </button>
             {error && <p className="text-danger mt-2">{error}</p>}

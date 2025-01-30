@@ -1,50 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Calendar, MapPin, Users, DollarSign } from "lucide-react";
-import { getFirestore, collection, doc, setDoc, deleteDoc, getDocs } from "firebase/firestore";
+import React, { useState, useEffect } from 'react';
+import { Calendar, MapPin, Users, DollarSign } from 'lucide-react';
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import eventData from "../data/uw-events.json"; 
 
 const Events = ({ user }) => {
-  const [savedEvents, setSavedEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
   const [messageData, setMessageData] = useState({
-    message: "",
-    businessName: "",
-    contactEmail: "",
+    message: '',
+    businessName: '',
+    contactEmail: ''
   });
+  const [businessData, setBusinessData] = useState(null);
+  const [eventsData, setEventsData] = useState([]);
+
   const db = getFirestore();
 
-  const eventsData = [
-    {
-      id: 1,
-      title: "iSchool Hackathon 2025",
-      organization: "Code Club UW",
-      date: "March 15-16, 2025",
-      location: "Mary Gates Hall",
-      attendees: 200,
-      budget: "$2000-3000",
-      contactEmail: "hackathon@codeclub.edu",
-    },
-    {
-      id: 2,
-      title: "Spring Cultural Festival",
-      organization: "International Student Society",
-      date: "April 20, 2025",
-      location: "University Square",
-      attendees: 500,
-      budget: "$5000-7000",
-      contactEmail: "culturalfest@university.edu",
-    },
-    {
-      id: 3,
-      title: "Engineering Career Fair",
-      organization: "College of Engineering",
-      date: "May 5, 2025",
-      location: "Engineering Hall",
-      attendees: 300,
-      budget: "$3000-4000",
-      contactEmail: "careerfair@eng.edu",
-    },
-  ];
+  useEffect(() => {
+    setEventsData(eventData.events);
+  }, []);
 
   useEffect(() => {
     const fetchSavedEvents = async () => {

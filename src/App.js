@@ -39,21 +39,21 @@ function App() {
       <Navbar user={user} />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route 
-          path="/events" 
+        <Route
+          path="/events"
           element={
             <AuthRoute>
               <Events user={user} />
             </AuthRoute>
-          } 
+          }
         />
-        <Route 
-          path="/profile" 
+        <Route
+          path="/profile"
           element={
             <AuthRoute>
               <BusinessProfile />
             </AuthRoute>
-          } 
+          }
         />
         <Route 
           path="/saved" 
@@ -67,14 +67,13 @@ function App() {
           path="/signup" 
           element={
             user ? <Navigate to="/events" replace /> : <BusinessSignup />
-          } 
+          }
         />
-        <Route 
-          path="/login" 
-          element={
-            user ? <Navigate to="/events" replace /> : <BusinessLogin />
-          } 
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/events" replace /> : <BusinessLogin />}
         />
+        <Route path="/recommendations" element={<Recommendations />} />
       </Routes>
     </>
   );
